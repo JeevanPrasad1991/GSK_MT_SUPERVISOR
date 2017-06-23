@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_daily_entry"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Daily Entry" />
+        <item
+            android:id="@+id/nav_downld"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Download" />
+        <item
+            android:id="@+id/navupload"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Upload" />
+        <item
+            android:id="@+id/nav_performance"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Performance" />
+
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_export"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Export" />
+            <item
+                android:id="@+id/nav_exit"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Exit" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:weightSum="100">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:id="@+id/belowme"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ff9933"
+        android:orientation="horizontal"
+        android:weightSum="100" >
+
+        <TextView
+            android:id="@+id/txt_idealFor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:layout_weight="100"
+            android:gravity="left"
+            android:textStyle="italic"
+            android:textSize="20sp"
+            android:text="Checklist" />
+        
+    </LinearLayout>
+
+  <ExpandableListView
+      android:layout_above="@+id/g"
+        android:id="@+id/lvExp"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+     android:layout_margin="2dp"
+      android:layout_marginBottom="?actionBarSize"
+        android:layout_below="@+id/belowme"
+        android:cacheColorHint="#00000000" />
+
+     
+  <LinearLayout
+      android:id="@+id/g"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_weight="7"
+      android:background="@color/white"
+      android:orientation="horizontal"
+      android:weightSum="100" >
+
+        <Button
+        android:id="@+id/butt"
+        android:layout_width="0dp"
+        android:layout_weight="30"
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
+    	<Button
+        android:id="@+id/save_btn"
+        android:layout_width="0dp"
+        android:layout_weight="40"
+            android:textSize="17dp"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+        android:layout_height="match_parent"
+        android:text="  SAVE " />
+    </LinearLayout>
+</RelativeLayout>
