@@ -228,7 +228,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 Snackbar.make(toolbar, "Please download data first", Snackbar.LENGTH_LONG).show();
             }
 
-
         } else if (id == R.id.nav_exit) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();

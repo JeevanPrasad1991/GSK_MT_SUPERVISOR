@@ -192,6 +192,7 @@ public class StorewisePssPerformanceActivity extends AppCompatActivity {
                     } else {
                         final Dialog dialog = new Dialog(StorewisePssPerformanceActivity.this);
                         //setting custom layout to dialog
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog.setContentView(R.layout.custom_dialog);
                         dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                         //  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -214,7 +215,10 @@ public class StorewisePssPerformanceActivity extends AppCompatActivity {
                 }
             });
 
-
+           /* holder.fpm1.setBackgroundColor(getPerColor(focussalesList.get(position).getPm1per().get(0)));
+            holder.fpm2.setBackgroundColor(getPerColor(focussalesList.get(position).getPm2per().get(0)));
+            holder.fpm3.setBackgroundColor(getPerColor(focussalesList.get(position).getPm3per().get(0)));*/
+            holder.current.setBackgroundColor(getPerColor(list.get(position).getCurrMonthper().get(0)));
             holder.emp.setText(list.get(position).getMerchanD().get(0));
             holder.current.setText(list.get(position).getCurrentM().get(0));
             holder.fpm1.setText(list.get(position).getPm1().get(0));
@@ -247,5 +251,21 @@ public class StorewisePssPerformanceActivity extends AppCompatActivity {
         startActivity(in);
         finish();
     }
+
+    public int getPerColor(String val) {
+        int per = 0;
+        try {
+            per = Integer.parseInt(val);
+        } catch (Exception e) {
+
+        }
+
+        if (per > 70) {
+            return Color.GREEN;
+        } else {
+            return Color.RED;
+        }
+    }
+
 
 }

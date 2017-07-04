@@ -32,6 +32,25 @@
                 android:textStyle="normal"
                 android:textColor="@color/black"
                 android:text="10"/>
+
+
+            <View
+                android:layout_width="2dp"
+                android:background="@color/colorPrimary"
+                android:layout_height="match_parent"
+                />
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/Fpm3_txt"
+                android:textSize="12sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textColor="@color/black"
+                android:text="30"/>
             <View
                 android:layout_width="2dp"
                 android:background="@color/colorPrimary"
@@ -43,7 +62,7 @@
                 android:textSize="12sp"
                 android:gravity="center"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:textStyle="normal"
                 android:textColor="@color/black"
@@ -82,23 +101,7 @@
                 android:textColor="@color/black"
                 android:text="30"/>
 
-            <View
-                android:layout_width="2dp"
-                android:background="@color/colorPrimary"
-                android:layout_height="match_parent"
-                />
 
-            <TextView
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:id="@+id/Fpm3_txt"
-                android:textSize="12sp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:textStyle="normal"
-                android:textColor="@color/black"
-                android:text="30"/>
 
 
 

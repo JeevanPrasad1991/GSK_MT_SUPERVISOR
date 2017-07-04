@@ -560,6 +560,21 @@ public class XMLHandlers {
 						failureGetterSetter.setPM3(xpp.nextText());
 					}
 
+					if (xpp.getName().equals("CURPER")) {
+						failureGetterSetter.setCurrMonthper(xpp.nextText());
+					}
+
+					if (xpp.getName().equals("PM1PER")) {
+						failureGetterSetter.setPm1per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM2PER")) {
+						failureGetterSetter.setPm2per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM3PER")) {
+						failureGetterSetter.setPm3per(xpp.nextText());
+					}
+
+
 				}
 				xpp.next();
 			}
@@ -602,6 +617,19 @@ public class XMLHandlers {
 						failureGetterSetter.setPm3(xpp.nextText());
 					}
 
+					if (xpp.getName().equals("CURRENTPER")) {
+                        failureGetterSetter.setCurrMonthper(xpp.nextText());
+                    }
+
+                    if (xpp.getName().equals("PM1PER")) {
+                        failureGetterSetter.setPm1per(xpp.nextText());
+                    }
+					if (xpp.getName().equals("PM2PER")) {
+						failureGetterSetter.setPm2per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM3PER")) {
+						failureGetterSetter.setPm3per(xpp.nextText());
+					}
 
 
                 }
@@ -645,6 +673,20 @@ public class XMLHandlers {
                     if (xpp.getName().equals("PM3")) {
                         failureGetterSetter.setPm3(xpp.nextText());
                     }
+
+					if (xpp.getName().equals("CURRENTPER")) {
+						failureGetterSetter.setCurrMonthper(xpp.nextText());
+					}
+
+					if (xpp.getName().equals("PM1PER")) {
+						failureGetterSetter.setPm1per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM2PER")) {
+						failureGetterSetter.setPm2per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM3PER")) {
+						failureGetterSetter.setPm3per(xpp.nextText());
+					}
 
 				}
 				xpp.next();
@@ -733,6 +775,20 @@ public class XMLHandlers {
 					if (xpp.getName().equals("TARGET")) {
 						failureGetterSetter.setTarget(xpp.nextText());
 					}
+					if (xpp.getName().equals("CURRENTPER")) {
+						failureGetterSetter.setCurrMonthper(xpp.nextText());
+					}
+
+					if (xpp.getName().equals("PM1PER")) {
+						failureGetterSetter.setPm1per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM2PER")) {
+						failureGetterSetter.setPm2per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM3PER")) {
+						failureGetterSetter.setPm3per(xpp.nextText());
+					}
+
 
 				}
 				xpp.next();
@@ -783,6 +839,20 @@ public class XMLHandlers {
 						failureGetterSetter.setTarget(xpp.nextText());
 					}
 
+					if (xpp.getName().equals("CURRENTPER")) {
+						failureGetterSetter.setCurrMonthper(xpp.nextText());
+					}
+
+					if (xpp.getName().equals("PM1PER")) {
+						failureGetterSetter.setPm1per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM2PER")) {
+						failureGetterSetter.setPm2per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM3PER")) {
+						failureGetterSetter.setPm3per(xpp.nextText());
+					}
+
 
 				}
 				xpp.next();
@@ -827,6 +897,19 @@ public class XMLHandlers {
 					}
 					if (xpp.getName().equals("PM3")) {
 						failureGetterSetter.setPm3(xpp.nextText());
+					}
+					if (xpp.getName().equals("CURRPER")) {
+						failureGetterSetter.setCurrMonthper(xpp.nextText());
+					}
+
+					if (xpp.getName().equals("PM1PER")) {
+						failureGetterSetter.setPm1per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM2PER")) {
+						failureGetterSetter.setPm2per(xpp.nextText());
+					}
+					if (xpp.getName().equals("PM3PER")) {
+						failureGetterSetter.setPm3per(xpp.nextText());
 					}
 
 				}

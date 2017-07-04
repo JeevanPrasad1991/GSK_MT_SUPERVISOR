@@ -59,7 +59,7 @@ public class Questionnair extends AppCompatActivity implements OnClickListener {
     private static ArrayList<QuestionnairBean> answerslist = new ArrayList<QuestionnairBean>();
     GSK_MT_SUPDatabase db;
     SharedPreferences preferences;
-    String store_id, process_id, answer, answer_id;
+    String store_id, process_id, answer, answer_id,date,app_ver;
     private ArrayAdapter<CharSequence> reason_adapter;
     Boolean update = false;
     boolean validation_flag = true;
@@ -81,6 +81,8 @@ public class Questionnair extends AppCompatActivity implements OnClickListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         preferences = PreferenceManager.getDefaultSharedPreferences(Questionnair.this);
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+        date = preferences.getString(CommonString.KEY_DATE, null);
+        app_ver = preferences.getString(CommonString.KEY_VERSION, "");
         db = new GSK_MT_SUPDatabase(Questionnair.this);
         db.open();
         process_id = getIntent().getStringExtra(CommonString.KEY_PROCESS_ID);
@@ -346,14 +348,14 @@ public class Questionnair extends AppCompatActivity implements OnClickListener {
                                             DialogInterface dialog, int id) {
                                         db.open();
                                         coverageDataWithProcess= db.getCoverageDataWithProcessid(store_id,process_id);
-                                        somecoverageData = db.getCoverageSomeData_(store_id);
+                                        somecoverageData = db.getCoverageSomeData_(store_id,date);
                                         if (coverageDataWithProcess.size()>0){
                                             db.deleteQuestionnairData(store_id, process_id);
                                             db.InsertQuestionnairAnswerData(process_id, store_id, listDataChild, listDataHeader);
                                         }else {
                                             db.open();
                                             String remark = "";
-                                            db.InsertCoverage(somecoverageData.get(0), process_id, "1", remark, CommonString.KEY_INVALID);
+                                            db.InsertCoverage(somecoverageData.get(0), process_id, app_ver, remark, CommonString.KEY_INVALID);
                                             db.deleteQuestionnairData(store_id, process_id);
                                             db.InsertQuestionnairAnswerData(process_id, store_id, listDataChild, listDataHeader);
                                         }

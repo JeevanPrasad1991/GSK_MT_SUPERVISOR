@@ -730,6 +730,7 @@ public class CommonString {
             + TABLE_INSERT_PERFORMANCE_DETAILS + " (" + KEY_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " INTEGER,"
             + KEY_NON_ACHIVEMENT_REASON_ID + " INTEGER,"
+            + KEY_VISIT_DATE + " VARCHAR,"
             + KEY_NON_ACHIVEMENT_REASON + " VARCHAR)";
 
 

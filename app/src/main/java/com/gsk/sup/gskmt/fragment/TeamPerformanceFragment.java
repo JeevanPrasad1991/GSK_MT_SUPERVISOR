@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,7 +24,6 @@ import java.util.ArrayList;
 
 public class TeamPerformanceFragment extends Fragment {
     // TODO: Rename and change types of parameters
-    private static final String ARG_SECTION_NUMBER = "section_number";
     ListView focusS_list, totalsale_list, teampss_list;
     GSK_MT_SUPDatabase database;
     ArrayList<SupFocusSaleGetterSetter> focusSaleList = new ArrayList<>();
@@ -34,6 +35,9 @@ public class TeamPerformanceFragment extends Fragment {
     TextView current_total2, pm1_tot2, pm2_total2, pm3_total_txt2;
     int focus_currentTotal1 = 0, focus_pm1_1 = 0, focus_pm2_1 = 0, focus_pm3_1 = 0;
     int focus_currentTotal2 = 0, focus_pm1_2 = 0, focus_pm2_2 = 0, focus_pm3_2 = 0;
+    int focus_pm1_percentage = 0, focus_pm2_percentage = 0, focus_pm3_percentage = 0;
+    int  total_pm1_percentage = 0, total_pm2_percentage = 0, total_pm3_percentage = 0;
+
     public TeamPerformanceFragment() {
         // Required empty public constructor
     }
@@ -45,7 +49,7 @@ public class TeamPerformanceFragment extends Fragment {
         focusS_list = (ListView) view.findViewById(R.id.focus_list);
         totalsale_list = (ListView) view.findViewById(R.id.totalsale_list);
         teampss_list = (ListView) view.findViewById(R.id.teampss_list);
-     //   total_txt = (TextView) view.findViewById(R.id.total_txt);
+        //   total_txt = (TextView) view.findViewById(R.id.total_txt);
         current_total = (TextView) view.findViewById(R.id.current_total);
         pm1_tot = (TextView) view.findViewById(R.id.pm1_tot);
         pm2_total = (TextView) view.findViewById(R.id.pm2_total);
@@ -64,52 +68,99 @@ public class TeamPerformanceFragment extends Fragment {
         database.open();
         focusSaleList = database.getSupFocusSaleData();
         if (focusSaleList.size() > 0) {
-            for (int i = 0; i < focusSaleList.size(); i++) {
-                int a = Integer.parseInt(focusSaleList.get(i).getCurrMonth().get(0));
-                focus_currentTotal = focus_currentTotal + a;
-                int b = Integer.parseInt(focusSaleList.get(i).getPm1().get(0));
-                focus_pm1 = focus_pm1 + b;
-                int c = Integer.parseInt(focusSaleList.get(i).getPm2().get(0));
-                focus_pm2 = focus_pm2 + c;
-                int d = Integer.parseInt(focusSaleList.get(i).getPm3().get(0));
-                focus_pm3 = focus_pm3 + d;
-            }
-            pm1_tot.setBackgroundColor(Color.GREEN);
-            pm2_total.setBackgroundColor(Color.GREEN);
-            pm3_total_txt.setBackgroundColor(Color.GREEN);
+            try {
+                for (int i = 0; i < focusSaleList.size(); i++) {
+                    int a = Integer.parseInt(focusSaleList.get(i).getCurrMonth().get(0));
+                    focus_currentTotal = focus_currentTotal + a;
+                    int b = Integer.parseInt(focusSaleList.get(i).getPm1().get(0));
+                    focus_pm1 = focus_pm1 + b;
+                    int c = Integer.parseInt(focusSaleList.get(i).getPm2().get(0));
+                    focus_pm2 = focus_pm2 + c;
+                    int d = Integer.parseInt(focusSaleList.get(i).getPm3().get(0));
+                    focus_pm3 = focus_pm3 + d;
 
-            current_total.setText(String.valueOf(focus_currentTotal));
-            pm1_tot.setText(String.valueOf(focus_pm1));
-            pm2_total.setText(String.valueOf(focus_pm2));
-            pm3_total_txt.setText(String.valueOf(focus_pm3));
-            focusS_list.setAdapter(new FocusBrandAdapter());
+                    int e = Integer.parseInt(focusSaleList.get(i).getPm1per().get(0));
+                    focus_pm1_percentage=focus_pm1_percentage + e;
+
+                    int f= Integer.parseInt(focusSaleList.get(i).getPm2per().get(0));
+                    focus_pm2_percentage=focus_pm2_percentage +f;
+
+                    int g= Integer.parseInt(focusSaleList.get(i).getPm2per().get(0));
+                    focus_pm3_percentage=focus_pm3_percentage + g;
+                }
+                int per_pm1=focus_pm1_percentage/focusSaleList.size();
+
+                int per_pm2=focus_pm2_percentage/focusSaleList.size();
+
+                int per_pm3=focus_pm3_percentage/focusSaleList.size();
+
+                pm1_tot.setBackgroundColor(getPerColorwithDivided(per_pm1));
+                pm2_total.setBackgroundColor(getPerColorwithDivided(per_pm2));
+                pm3_total_txt.setBackgroundColor(getPerColorwithDivided(per_pm3));
+
+                current_total.setText(String.valueOf(focus_currentTotal));
+                pm1_tot.setText(String.valueOf(focus_pm1));
+                pm2_total.setText(String.valueOf(focus_pm2));
+                pm3_total_txt.setText(String.valueOf(focus_pm3));
+
+                focusS_list.setAdapter(new FocusBrandAdapter());
+                setListViewHeightBasedOnChildren(focusS_list, 150);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
         }
         totalSaleList = database.getSupTotalSalesData();
         if (totalSaleList.size() > 0) {
-            for (int i = 0; i < totalSaleList.size(); i++) {
-                int a = Integer.parseInt(totalSaleList.get(i).getCurrMonth().get(0));
-                focus_currentTotal1 = focus_currentTotal1 + a;
-                int b = Integer.parseInt(totalSaleList.get(i).getPm1().get(0));
-                focus_pm1_1 = focus_pm1_1 + b;
-                int c = Integer.parseInt(totalSaleList.get(i).getPm2().get(0));
-                focus_pm2_1 = focus_pm2_1 + c;
-                int d = Integer.parseInt(totalSaleList.get(i).getPm3().get(0));
-                focus_pm3_1 = focus_pm3_1 + d;
+            try {
+
+                for (int i = 0; i < totalSaleList.size(); i++) {
+                    int a = Integer.parseInt(totalSaleList.get(i).getCurrMonth().get(0));
+                    focus_currentTotal1 = focus_currentTotal1 + a;
+                    int b = Integer.parseInt(totalSaleList.get(i).getPm1().get(0));
+                    focus_pm1_1 = focus_pm1_1 + b;
+                    int c = Integer.parseInt(totalSaleList.get(i).getPm2().get(0));
+                    focus_pm2_1 = focus_pm2_1 + c;
+                    int d = Integer.parseInt(totalSaleList.get(i).getPm3().get(0));
+                    focus_pm3_1 = focus_pm3_1 + d;
+
+                    int e = Integer.parseInt(totalSaleList.get(i).getPm1per().get(0));
+                    total_pm1_percentage=total_pm1_percentage + e;
+
+                    int f= Integer.parseInt(totalSaleList.get(i).getPm2per().get(0));
+                    total_pm2_percentage=total_pm2_percentage +f;
+
+                    int g= Integer.parseInt(totalSaleList.get(i).getPm2per().get(0));
+                    total_pm3_percentage=total_pm3_percentage + g;
+                }
+
+                int per_pm1=total_pm1_percentage/totalSaleList.size();
+
+                int per_pm2=total_pm2_percentage/totalSaleList.size();
+
+                int per_pm3=total_pm3_percentage/totalSaleList.size();
+
+                pm1_tot1.setBackgroundColor(getPerColorwithDivided(per_pm1));
+                pm2_total1.setBackgroundColor(getPerColorwithDivided(per_pm2));
+                pm3_total_txt1.setBackgroundColor(getPerColorwithDivided(per_pm3));
+
+
+                current_total1.setText(String.valueOf(focus_currentTotal1));
+                pm1_tot1.setText(String.valueOf(focus_pm1_1));
+                pm2_total1.setText(String.valueOf(focus_pm2_1));
+                pm3_total_txt1.setText(String.valueOf(focus_pm3_1));
+
+                totalsale_list.setAdapter(new SalesTotalAdapter());
+                setListViewHeightBasedOnChildren(totalsale_list, 150);
+            }catch (Exception e){
+                e.printStackTrace();
             }
 
-            pm1_tot1.setBackgroundColor(Color.GREEN);
-            pm2_total1.setBackgroundColor(Color.GREEN);
-            pm3_total_txt1.setBackgroundColor(Color.GREEN);
-
-            current_total1.setText(String.valueOf(focus_currentTotal1));
-            pm1_tot1.setText(String.valueOf(focus_pm1_1));
-            pm2_total1.setText(String.valueOf(focus_pm2_1));
-            pm3_total_txt1.setText(String.valueOf(focus_pm3_1));
-
-            totalsale_list.setAdapter(new SalesTotalAdapter());
         }
         teamPssSaleList = database.getTeamPssSalesData();
         if (teamPssSaleList.size() > 0) {
+            try {
             for (int i = 0; i < teamPssSaleList.size(); i++) {
                 int a = Integer.parseInt(teamPssSaleList.get(i).getPerfect().get(0));
                 focus_currentTotal2 = focus_currentTotal2 + a;
@@ -126,6 +177,12 @@ public class TeamPerformanceFragment extends Fragment {
             pm2_total2.setText(String.valueOf(focus_pm2_2));
             pm3_total_txt2.setText(String.valueOf(focus_pm3_2));
             teampss_list.setAdapter(new TeamPssAdapter());
+            setListViewHeightBasedOnChildren(teampss_list, 150);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         }
 
         return view;
@@ -167,9 +224,10 @@ public class TeamPerformanceFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.fpm1.setBackgroundColor(Color.GREEN);
-            holder.fpm2.setBackgroundColor(Color.GREEN);
-            holder.fpm3.setBackgroundColor(Color.GREEN);
+            holder.fpm1.setBackgroundColor(getPerColor(focusSaleList.get(position).getPm1per().get(0)));
+            holder.fpm2.setBackgroundColor(getPerColor(focusSaleList.get(position).getPm2per().get(0)));
+            holder.fpm3.setBackgroundColor(getPerColor(focusSaleList.get(position).getPm3per().get(0)));
+            holder.current.setBackgroundColor(getPerColor(focusSaleList.get(position).getCurrMonthper().get(0)));
             holder.emp.setText(focusSaleList.get(position).getEmployee().get(0));
             holder.current.setText(focusSaleList.get(position).getCurrMonth().get(0));
             holder.fpm1.setText(focusSaleList.get(position).getPm1().get(0));
@@ -221,9 +279,10 @@ public class TeamPerformanceFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.fpm1.setBackgroundColor(Color.GREEN);
-            holder.fpm2.setBackgroundColor(Color.GREEN);
-            holder.fpm3.setBackgroundColor(Color.GREEN);
+            holder.fpm1.setBackgroundColor(getPerColor(totalSaleList.get(position).getPm1per().get(0)));
+            holder.fpm2.setBackgroundColor(getPerColor(totalSaleList.get(position).getPm2per().get(0)));
+            holder.fpm3.setBackgroundColor(getPerColor(totalSaleList.get(position).getPm3per().get(0)));
+            holder.current.setBackgroundColor(getPerColor(totalSaleList.get(position).getCurrMonthper().get(0)));
             holder.emp.setText(totalSaleList.get(position).getEmployee().get(0));
             holder.current.setText(totalSaleList.get(position).getCurrMonth().get(0));
             holder.fpm1.setText(totalSaleList.get(position).getPm1().get(0));
@@ -289,5 +348,56 @@ public class TeamPerformanceFragment extends Fragment {
         }
     }
 
+    public static void setListViewHeightBasedOnChildren(ListView listView, int extraheight) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
 
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
+                View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + extraheight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+    public int getPerColor(String val) {
+        int per = 0;
+        try {
+            per = Integer.parseInt(val);
+        } catch (Exception e) {
+
+        }
+
+        if (per > 70) {
+            return Color.GREEN;
+        } else {
+            return Color.RED;
+        }
+    }
+
+    public int getPerColorwithDivided(int val) {
+        int per = 0;
+        try {
+            per = val;
+        } catch (Exception e) {
+
+        }
+
+        if (per > 70) {
+            return Color.GREEN;
+        } else {
+            return Color.RED;
+        }
+    }
 }

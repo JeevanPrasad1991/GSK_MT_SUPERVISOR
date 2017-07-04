@@ -125,8 +125,8 @@ public class UploadDataActivity extends AppCompatActivity {
                 coverageBeanlist = database.getCoverageData_Updated(visit_date);
                 if (coverageBeanlist.size() > 0) {
                     for (int i = 0; i < coverageBeanlist.size(); i++) {
-                        //storestatus = database.getStoreStatus_new(coverageBeanlist.get(i).getStoreId(), coverageBeanlist.get(i).getProcess_id());
-                        if (!coverageBeanlist.get(i).getStatus().equalsIgnoreCase(CommonString.KEY_U)) {
+                       storestatus = database.getStoreStatus_new(coverageBeanlist.get(i).getStoreId(), coverageBeanlist.get(i).getProcess_id());
+                        if (!coverageBeanlist.get(i).getStatus().equalsIgnoreCase(CommonString.KEY_U)|| !storestatus.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_U)) {
                             String onXML = "[DATA][USER_DATA][STORE_ID]"
                                     + coverageBeanlist.get(i).getStoreId()
                                     + "[/STORE_ID]"

@@ -85,6 +85,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPassword.setText("cpm@5678");*/
         mUsername.setText("dilip.mehra");
         mPassword.setText("cpm@5678");
+        /*  mUsername.setText("bhagwati");
+        mPassword.setText("cpm@5678");*/
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
         p_username = preferences.getString(CommonString.KEY_USERNAME, null);
@@ -129,10 +131,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             alertDialog.setPositiveButton("YES",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-
-                            intent = new Intent(
-                                    Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             startActivity(intent);
+                            dialog.dismiss();
                         }
                     });
 

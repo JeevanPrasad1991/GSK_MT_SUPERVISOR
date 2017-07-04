@@ -76,6 +76,8 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
         db.execSQL(TableBean.getTotal_sale_mapping_table());
         db.execSQL(TableBean.getTeam_pass_sale_mapping_table());
         db.execSQL(TableBean.getFocus_sale_storewise_sale_mapping_table());
+
+
         db.execSQL(TableBean.getTotal_sale_storewise_sale_mapping_table());
         db.execSQL(TableBean.getPss_sale_storewise_sale_mapping_table());
         db.execSQL(TableBean.getPss_srorewise_details_mapping_table());
@@ -149,17 +151,6 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
     }
 
 
-    public void updateCoverageRemark(String store_id, String reason_id, String remark) {
-
-        try {
-            ContentValues values = new ContentValues();
-            values.put(CommonString.KEY_REASON_ID, reason_id);
-            values.put(CommonString.KEY_REMARK, remark);
-            db.update(CommonString.TABLE_COVERAGE_DATA, values, CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
-        } catch (Exception e) {
-
-        }
-    }
 
     public void InsertJCP(JCPGetterSetter data) {
         db.delete("JOURNEY_PLAN_SUP", null, null);
@@ -472,186 +463,7 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<TOTBean> getTOTData(String store_id, String process_id, String cate_id) {
 
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-        ArrayList<TOTBean> list = new ArrayList<TOTBean>();
-        Cursor dbcursor = null;
-
-        try {
-
-			/*SELECT D.DISPLAY_ID, D.DISPLAY 
-            FROM MAPPING_TOT M INNER JOIN
-			DISPLAY_MASTER D ON M.DISPLAY_ID = D.DISPLAY_ID
-			WHERE M.STORE_ID=2389 AND M.CATEGORY_ID=1 AND M.PROCESS_ID=3*/
-
-
-            dbcursor = db.rawQuery("SELECT D.DISPLAY_ID , D.DISPLAY, D.IMAGE_URL, M.TARGET_QTY," +
-                    " M.TYPE, M.UID, M.BRAND_ID, BR.BRAND FROM TOT_MAPPING_SUP M INNER JOIN DISPLAY_MASTER D ON"
-                    + " M.DISPLAY_ID = D.DISPLAY_ID INNER JOIN BRAND_MASTER BR ON M.BRAND_ID = BR.BRAND_ID WHERE " +
-                    " M.STORE_ID = '" + store_id + "' AND M.PROCESS_ID = '" + process_id
-                    + "' AND M.CATEGORY_ID = '" + cate_id + "'", null);
-
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    TOTBean sb = new TOTBean();
-
-                    sb.setDisplay_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY_ID"))));
-
-                    sb.setBrand((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("BRAND"))));
-
-                    sb.setBrand_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("BRAND_ID"))));
-
-                    sb.setDisplay((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY"))));
-
-
-                    sb.setTrg_quantity((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("TARGET_QTY"))));
-
-                    sb.setType((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("TYPE"))));
-
-                    sb.setUnique_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("UID"))));
-
-                    sb.setImage_url((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("IMAGE_URL"))));
-
-                    sb.setAFTER_QTY("");
-
-                    sb.setCamera1("NO");
-
-                    sb.setCamera2("NO");
-
-                    sb.setCamera3("NO");
-                    sb.setBEFORE_QTY("");
-                    sb.setStock_count("");
-
-                    sb.setImage1("");
-                    sb.setImage2("");
-                    sb.setImage3("");
-                    sb.setKEY_ID("");
-
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
-
-    public ArrayList<TOTBean> getInsertedAfterTOTData(String store_id, String cate_id, String process_id) {
-
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-        ArrayList<TOTBean> list = new ArrayList<TOTBean>();
-        Cursor dbcursor = null;
-
-        try {
-
-
-            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_TOT_AFTER
-                            + " WHERE STORE_ID = '" + store_id + "'"
-                            + " AND CATEGORY_ID = '" + cate_id + "'"
-                            + " AND PROCESS_ID = '" + process_id + "'"
-                    , null);
-
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    TOTBean sb = new TOTBean();
-
-
-                    sb.setStore_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_STORE_ID))));
-
-                    sb.setDisplay_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID))));
-
-                    sb.setBrand_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_BRAND_ID))));
-
-                    sb.setBrand((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_BRAND))));
-
-                    sb.setDisplay((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_DISPLAY))));
-
-
-                    sb.setTrg_quantity((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_TARGER_QUANTITY))));
-
-                    sb.setAFTER_QTY((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_AFTER_QUANTITY))));
-
-
-                    sb.setStock_count((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_AFTER_STOCK_COUNT))));
-
-
-                    sb.setImage1((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE1))));
-
-                    sb.setImage2((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE2))));
-
-                    sb.setImage3((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE3))));
-
-
-                    sb.setCategory_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID))));
-
-
-                    sb.setKEY_ID((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_ID))));
-
-
-                    sb.setType((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_TYPE))));
-
-                    sb.setImage_url((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE_URL))));
-
-                    sb.setUnique_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.UNIQUE_KEY_ID))));
-
-
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
 
 
     public ArrayList<StoreBean> getProcess(String date, String store_id) {
@@ -940,7 +752,8 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
         try {
             ContentValues values = new ContentValues();
             values.put(CommonString.KEY_CHECKOUT_STATUS, status);
-            db.update("JOURNEY_PLAN_SUP", values, CommonString.KEY_STORE_CD + "='" + storeid + "' AND " + CommonString.KEY_CURRENT_DATETIME + "='" + visitdate + "' AND PROCESS_ID ='" + process_id + "'", null);
+            db.update("JOURNEY_PLAN_SUP", values, CommonString.KEY_STORE_CD + "='" + storeid + "' AND " +
+                    CommonString.KEY_CURRENT_DATETIME + "='" + visitdate + "' AND PROCESS_ID ='" + process_id + "'", null);
         } catch (Exception e) {
         }
     }
@@ -964,80 +777,6 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<TOTBean> getBeforeTOTDataForUpload(String store_id, String process_id) {
-
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-        ArrayList<TOTBean> list = new ArrayList<TOTBean>();
-        Cursor dbcursor = null;
-
-        try {
-
-            dbcursor = db.rawQuery("SELECT * FROM TOT_BEFORE WHERE STORE_ID = '" + store_id + "' AND PROCESS_ID ='" + process_id + "'"
-                    , null);
-
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    TOTBean sb = new TOTBean();
-
-                    sb.setStore_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("STORE_ID")));
-
-
-                    sb.setBrand_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("BRAND_ID")));
-
-
-                    sb.setDisplay_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY_ID"))));
-
-                    sb.setDisplay((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY"))));
-
-                    sb.setBEFORE_QTY((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_BEFORE_QUANTITY))));
-
-
-                    sb.setTrg_quantity((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_TARGER_QUANTITY))));
-
-
-                    sb.setStock_count((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_BEFORE_STOCK_COUNT))));
-
-
-                    sb.setCategory_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID))));
-
-                    sb.setImage1((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE1))));
-
-                    sb.setImage2((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE2))));
-
-                    sb.setImage3((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE3))));
-
-
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
 
 
     public ArrayList<QuestionnairBean> getAllAnswers(String question_id,
@@ -1050,9 +789,7 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
         try {
 
 
-            dbcursor = db.rawQuery("SELECT DISTINCT ANSWER_ID, ANSWER FROM QUESTIONNAIRE_SUP"
-                            + " WHERE "
-                            + CommonString.KEY_PROCESS_ID
+            dbcursor = db.rawQuery("SELECT DISTINCT ANSWER_ID, ANSWER FROM QUESTIONNAIRE_SUP" + " WHERE " + CommonString.KEY_PROCESS_ID
                             + "='" + process_id + "' AND QUESTION_ID ='" + question_id + "'",
                     null);
 
@@ -1241,56 +978,16 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<SkuBean> getCategoryList(String process_id) {
-
-        Log.d("FetchingStoredata---------->Start<------------", "----------");
-        ArrayList<SkuBean> list = new ArrayList<SkuBean>();
-        Cursor dbcursor = null;
-
-        try {
-
-            dbcursor = db.rawQuery("SELECT DISTINCT CATEGORY_ID, CATEGORY from CATEGORY_MASTER",
-                    null);
-
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    SkuBean sb = new SkuBean();
-
-                    sb.setCategory_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("CATEGORY_ID")));
-
-                    sb.setCategory((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("CATEGORY"))));
 
 
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.getMessage());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
-
-
-    public void InsertNonAchivementPerformance(String store_id, String reason_id, String reason) {
-        db.delete(CommonString.TABLE_INSERT_PERFORMANCE_DETAILS, CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
+    public void InsertNonAchivementPerformance(String store_id, String reason_id, String reason,String visit_date) {
+        db.delete(CommonString.TABLE_INSERT_PERFORMANCE_DETAILS, CommonString.KEY_STORE_ID + "='" + store_id + "' AND VISIT_DATE = '" + visit_date + "'", null);
         ContentValues values = new ContentValues();
         try {
             values.put(CommonString.KEY_STORE_ID, store_id);
             values.put(CommonString.KEY_NON_ACHIVEMENT_REASON_ID, reason_id);
             values.put(CommonString.KEY_NON_ACHIVEMENT_REASON, reason);
+            values.put(CommonString.KEY_VISIT_DATE, visit_date);
             db.insert(CommonString.TABLE_INSERT_PERFORMANCE_DETAILS, null, values);
         } catch (Exception ex) {
             Log.d("Database Exception while Insert Additional data ", ex.getMessage());
@@ -1329,366 +1026,15 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
     }
 
 
-    public void InsertAfterAdditionalInfo(SkuBean data, String store_id, String cate_id, String process_id) {
-        ContentValues values = new ContentValues();
 
-        try {
 
-            values.put(CommonString.KEY_STORE_ID, store_id);
-            values.put(CommonString.KEY_BRAND, data.getBrand());
-            values.put(CommonString.KEY_BRAND_ID, data.getBrand_id());
-            values.put(CommonString.KEY_DISPLAY, data.getDisplay());
-            values.put(CommonString.KEY_DISPLAY_ID, data.getDisplay_id());
 
-            values.put(CommonString.KEY_QUANTITY, data.getQuantity());
-            values.put(CommonString.KEY_IMAGE, data.getAdditional_image());
-            values.put(CommonString.KEY_ADDITIONAL_YESYorNO, data.getYesorno());
 
-            values.put(CommonString.KEY_CATEGORY_ID, cate_id);
 
-            values.put(CommonString.KEY_PROCESS_ID, process_id);
 
 
-            db.insert(CommonString.TABLE_INSERT_AFTER_ADDTIONAL_DETAILS, null, values);
 
 
-        } catch (Exception ex) {
-            Log.d("Database Exception while Insert Additional data ", ex.getMessage());
-        }
-
-    }
-
-    public void InsertAfterTOTData(String store_id,
-                                   ArrayList<TOTBean> data, String cate_id, String process_id) {
-
-        ContentValues values = new ContentValues();
-
-        try {
-
-            for (int i = 0; i < data.size(); i++) {
-                TOTBean sdata = new TOTBean();
-
-
-                sdata = data.get(i);
-                values.put(CommonString.KEY_STORE_ID, store_id);
-                values.put(CommonString.KEY_DISPLAY_ID, sdata.getDisplay_id());
-                values.put(CommonString.KEY_AFTER_QUANTITY, sdata.getAFTER_QTY());
-
-                values.put(CommonString.KEY_AFTER_STOCK_COUNT, sdata.getStock_count());
-
-                values.put(CommonString.KEY_TARGER_QUANTITY, sdata.getTrg_quantity());
-
-                values.put(CommonString.KEY_DISPLAY, sdata.getDisplay());
-
-                values.put(CommonString.KEY_CATEGORY_ID, cate_id);
-                values.put(CommonString.KEY_IMAGE1, sdata.getImage1());
-                values.put(CommonString.KEY_IMAGE2, sdata.getImage2());
-                values.put(CommonString.KEY_IMAGE3, sdata.getImage3());
-                values.put(CommonString.KEY_BRAND_ID, sdata.getBrand_id());
-                values.put(CommonString.KEY_BRAND, sdata.getBrand());
-                values.put(CommonString.UNIQUE_KEY_ID, sdata.getUnique_id());
-                values.put(CommonString.KEY_TYPE, sdata.getType());
-                values.put(CommonString.KEY_IMAGE_URL, sdata.getImage_url());
-                values.put(CommonString.KEY_PROCESS_ID, process_id);
-
-
-                db.insert(CommonString.TABLE_TOT_AFTER, null,
-                        values);
-            }
-
-        } catch (Exception ex) {
-            Log.d("Database Exception while Insert Stock Data ",
-                    ex.getMessage());
-        }
-
-    }
-
-
-    public ArrayList<TOTBean> getAfterTOTData(String store_id, String cate_id, String process_id) {
-
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-        ArrayList<TOTBean> list = new ArrayList<TOTBean>();
-        Cursor dbcursor = null;
-
-        try {
-
-            dbcursor = db.rawQuery("SELECT * FROM TOT_AFTER WHERE STORE_ID = '" + store_id + "' AND CATEGORY_ID = '" +
-                            cate_id + "' AND PROCESS_ID='" + process_id + "'"
-                    , null);
-
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    TOTBean sb = new TOTBean();
-
-                    sb.setStore_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("STORE_ID")));
-
-
-                    sb.setDisplay_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY_ID"))));
-
-                    sb.setDisplay((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY"))));
-
-
-                    sb.setBrand((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("BRAND"))));
-
-
-                    sb.setBrand_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("BRAND_ID"))));
-
-                    sb.setAFTER_QTY((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_AFTER_QUANTITY))));
-
-
-                    sb.setTrg_quantity((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_TARGER_QUANTITY))));
-
-
-                    sb.setStock_count((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_AFTER_STOCK_COUNT))));
-
-
-                    sb.setCategory_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID))));
-
-                    sb.setImage1((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE1))));
-
-                    sb.setImage2((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE2))));
-
-                    sb.setImage3((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE3))));
-
-                    sb.setUnique_id((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.UNIQUE_KEY_ID))));
-
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.getMessage());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
-
-    public ArrayList<TOTBean> getInsertedTOTQuestionsData(String store_id, String display_id,
-                                                          String category_id, String unique_id, String process_id) {
-
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-        ArrayList<TOTBean> list = new ArrayList<TOTBean>();
-        Cursor dbcursor = null;
-
-        try {
-
-
-            dbcursor = db.rawQuery("SELECT * FROM QUESTION_ANSWER_TABLE "
-                            + " WHERE DISPLAY_ID ='" + display_id + "' AND STORE_ID = '" + store_id + "' AND " + CommonString.KEY_CATEGORY_ID + "='" + category_id + "'" +
-                            " AND " + CommonString.UNIQUE_KEY_ID + "='" + unique_id + "' AND " + CommonString.KEY_PROCESS_ID + "='"
-                            + process_id + "'"
-                    , null);
-
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    TOTBean sb = new TOTBean();
-
-
-                    sb.setKEY_ID((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.UNIQUE_KEY_ID))));
-
-                    sb.setQuestion((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("QUESTION"))));
-
-                    sb.setQuestion_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("QUESTION_ID"))));
-
-
-                    sb.setAnswer((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("ANSWER"))));
-
-                    sb.setDisplay_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY_ID"))));
-
-
-//					sb.setAnswer("NO");	
-
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.getMessage());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
-
-
-    public ArrayList<TOTBean> getQuestionsData(String display_id) {
-
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-        ArrayList<TOTBean> list = new ArrayList<TOTBean>();
-        Cursor dbcursor = null;
-
-        try {
-
-			
-			/*SELECT Q.QUESTION
-            FROM QUESTION_MASTER Q INNER JOIN
-			MAPPING_QUESTION_DISPLAY MQ ON Q.QUESTION_ID = MQ.QUESTION_ID INNER JOIN
-			DISPLAY_MASTER D ON D.DISPLAY_ID = MQ.DISPLAY_ID
-			WHERE MQ.TO_DATE IS NULL AND D.ISDEL=0 AND D.DISPLAY_ID=3
-*/
-
-
-            dbcursor = db.rawQuery("SELECT Q.QUESTION, Q.QUESTION_ID FROM QUESTION_MASTER Q INNER JOIN "
-                            + " QUESTION_MAPPING MQ ON Q.QUESTION_ID = MQ.QUESTION_ID INNER JOIN"
-                            + " DISPLAY_MASTER D ON D.DISPLAY_ID = MQ.DISPLAY_ID"
-                            + " WHERE D.DISPLAY_ID='" + display_id + "'"
-                    , null);
-
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    TOTBean sb = new TOTBean();
-
-
-                    sb.setQuestion((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("QUESTION"))));
-
-                    sb.setQuestion_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("QUESTION_ID"))));
-
-
-                    sb.setAnswer("NO");
-
-
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
-
-    public void updateGapsData(String storeid, String Cat_id, String display_id, String question_id,
-                               String answer, String unique_id, String process_id) {
-
-        try {
-            ContentValues values = new ContentValues();
-
-            values.put("ANSWER", answer);
-
-            db.update("QUESTION_ANSWER_TABLE", values,
-                    " STORE_ID ='" + storeid + "' AND  CATEGORY_ID = '" + Cat_id + "' AND DISPLAY_ID = '" + display_id + "'" +
-                            " AND QUESTION_ID = '" + question_id + "' AND "
-                            + CommonString.UNIQUE_KEY_ID + " = '" + unique_id + "'" +
-                            " AND " + CommonString.KEY_PROCESS_ID + "='" + process_id + "'", null);
-
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Coverage Data!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-
-        }
-    }
-
-    public void InsertQuestionData(
-            ArrayList<TOTBean> data, String display_id, String store_id, String cate_id, String unique_id, String process_id) {
-
-        ContentValues values = new ContentValues();
-
-
-        try {
-
-            for (int i = 0; i < data.size(); i++) {
-                TOTBean sdata = new TOTBean();
-
-
-                sdata = data.get(i);
-                values.put("QUESTION_ID", sdata.getQuestion_id());
-                values.put("DISPLAY_ID", display_id);
-                values.put("ANSWER", sdata.getAnswer());
-                values.put("QUESTION", sdata.getQuestion());
-
-                values.put("STORE_ID", store_id);
-                values.put(CommonString.KEY_CATEGORY_ID, cate_id);
-                values.put(CommonString.UNIQUE_KEY_ID, unique_id);
-                values.put(CommonString.KEY_PROCESS_ID, process_id);
-
-
-                db.insert("QUESTION_ANSWER_TABLE", null,
-                        values);
-            }
-
-        } catch (Exception ex) {
-            Log.d("Database Exception while Insert Stock Data ",
-                    ex.toString());
-        }
-
-    }
-
-    public void updateAfterTOTData(String storeid, String brand_id, String display_id, String quantity, String stock_count, String image1,
-                                   String image2, String image3, String process_id) {
-
-        try {
-            ContentValues values = new ContentValues();
-
-
-            values.put(CommonString.KEY_AFTER_QUANTITY, quantity);
-
-            values.put(CommonString.KEY_AFTER_STOCK_COUNT, stock_count);
-
-
-            values.put(CommonString.KEY_IMAGE1, image1);
-            values.put(CommonString.KEY_IMAGE2, image2);
-            values.put(CommonString.KEY_IMAGE3, image3);
-
-
-            db.update(CommonString.TABLE_TOT_AFTER, values, " STORE_ID ='" + storeid + "' AND  BRAND_ID = '" + brand_id + "' AND DISPLAY_ID = '" + display_id + "'" + " AND PROCESS_ID ='" + process_id + "'", null);
-
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Coverage Data!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-
-        }
-    }
 
     public void InsertQuestionData(QuestionGetterSetter data) {
         db.delete("QUESTION_MASTER", null, null);
@@ -1767,77 +1113,12 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
     }
 
 
-    public StoreBean getStoreStatus(String id, String process_id) {
-
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-
-        StoreBean sb = new StoreBean();
-
-        Cursor dbcursor = null;
-
-        try {
-            dbcursor = db.rawQuery("SELECT  * from "
-                    + "JOURNEY_PLAN_SUP" + "  WHERE STORE_ID = '"
-                    + id + "' AND PROCESS_ID ='" + process_id + "'", null);
-
-            if (dbcursor != null) {
-                int numrows = dbcursor.getCount();
-
-                dbcursor.moveToFirst();
-                for (int i = 0; i < numrows; i++) {
-
-                    sb.setSTORE_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_STORE_CD)));
-                    sb.setSTORE((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_STORE))));
-                    sb.setCITY(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_ADDRES)));
-
-                    sb.setEMP_ID(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("EMP_ID")));
-
-                    sb.setPROCESS_ID((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("PROCESS_ID"))));
-                    sb.setVISIT_DATE(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("VISIT_DATE")));
-
-                    sb.setREGION_ID(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("REGION_ID")));
-
-                    sb.setKey_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("KEY_ID")));
-
-                    sb.setStoreType_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("STORETYPE_ID")));
-
-                    sb.setUPLOAD_STATUS(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("UPLOAD_STATUS")));
-
-                    sb.setCHECKOUT_STATUS(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("CHECKOUT_STATUS")));
-
-                    dbcursor.moveToNext();
-
-                }
-
-                dbcursor.close();
-
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return sb;
-
-    }
 
     public void InsertCoverage(CoverageBean data, String process_id, String app_version, String remark, String status) {
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + data.getStoreId() + "' and " + CommonString.KEY_VISIT_DATE + "='" + data.getVisitDate() + "' AND PROCESS_ID ='" + process_id + "'", null);
         ContentValues values = new ContentValues();
         try {
-            db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + data.getStoreId() + "' and " + CommonString.KEY_VISIT_DATE + "='" + data.getVisitDate() + "' AND PROCESS_ID ='" + process_id + "'", null);
-            values.put(CommonString.KEY_STORE_ID, data.getStoreId());
+          values.put(CommonString.KEY_STORE_ID, data.getStoreId());
             values.put(CommonString.KEY_USER_ID, data.getUserId());
             values.put(CommonString.KEY_IN_TIME, data.getInTime());
             values.put(CommonString.KEY_OUT_TIME, data.getOutTime());
@@ -1860,9 +1141,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
     }
 
     public void InsertCoveragesSomeData(CoverageBean data) {
+        db.delete(CommonString.TABLE_COVERAGES_SOME_DATA, CommonString.KEY_STORE_ID + "='" + data.getStoreId() + "' and "
+                + CommonString.KEY_VISIT_DATE + "='" + data.getVisitDate() +  "'", null);
         ContentValues values = new ContentValues();
         try {
-            //// db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + store_id + "' and " + CommonString.KEY_VISIT_DATE + "='" + date + "' AND PROCESS_ID ='" + process_id + "'", null);
             values.put(CommonString.KEY_STORE_ID, data.getStoreId());
             values.put(CommonString.KEY_USER_ID, data.getUserId());
             values.put(CommonString.KEY_IN_TIME, data.getInTime());
@@ -1933,11 +1215,11 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_COVERAGES_SOME_DATA, null, null);
     }
 
-    public ArrayList<CoverageBean> getCoverageSomeData_(String store_id) {
+    public ArrayList<CoverageBean> getCoverageSomeData_(String store_id,String visit_date) {
         ArrayList<CoverageBean> list = new ArrayList<CoverageBean>();
         Cursor dbcursor = null;
         try {
-            dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGES_SOME_DATA + " where " + CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
+            dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGES_SOME_DATA + " where " + CommonString.KEY_STORE_ID + "='" + store_id + "' AND VISIT_DATE = '"+visit_date+"'", null);
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
@@ -2123,40 +1405,6 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<CoverageBean> getCoverageStatusData(String visitdate) {
-        ArrayList<CoverageBean> list = new ArrayList<CoverageBean>();
-        Cursor dbcursor = null;
-        try {
-            dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGE_DATA + " where " + CommonString.KEY_VISIT_DATE + "='" + visitdate + "' ", null);
-
-            // dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGE_DATA + " where " + CommonString.KEY_VISIT_DATE + "='" + visitdate + "' AND STORE_ID ='" + store_id +  "' AND PROCESS_ID ='"+ process_id + "' ", null);
-            if (dbcursor != null) {
-
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    CoverageBean sb = new CoverageBean();
-                    sb.setStoreId(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_STORE_ID)));
-                    sb.setUserId((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_USER_ID))));
-                    sb.setStatus((((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_STATUS))))));
-                    sb.setProcess_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PROCESS_ID)));
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Coverage Data!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-
-        } finally {
-            if (dbcursor != null) {
-                dbcursor.close();
-            }
-        }
-        return list;
-    }
 
 
     public ArrayList<CoverageBean> getCoverageData(String visitdate, String store_id, String process_id) {
@@ -2346,293 +1594,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<TOTBean> getAfterTOTDataForUpload(String store_id, String process_id) {
 
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-        ArrayList<TOTBean> list = new ArrayList<TOTBean>();
-        Cursor dbcursor = null;
 
-        try {
 
-            dbcursor = db.rawQuery("SELECT * FROM TOT_AFTER WHERE STORE_ID = '" + store_id + "' AND PROCESS_ID='" + process_id + "'"
-                    , null);
 
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    TOTBean sb = new TOTBean();
-
-                    sb.setKEY_ID(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_ID)));
-
-                    sb.setStore_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("STORE_ID")));
-
-
-                    sb.setDisplay_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY_ID"))));
-
-                    sb.setDisplay((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY"))));
-
-
-                    sb.setBrand((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("BRAND"))));
-
-
-                    sb.setBrand_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("BRAND_ID"))));
-
-                    sb.setAFTER_QTY((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_AFTER_QUANTITY))));
-
-
-                    sb.setTrg_quantity((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_TARGER_QUANTITY))));
-
-
-                    sb.setStock_count((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_AFTER_STOCK_COUNT))));
-
-
-                    sb.setCategory_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID))));
-
-                    sb.setImage1((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE1))));
-
-                    sb.setImage2((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE2))));
-
-                    sb.setImage3((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE3))));
-
-
-                    sb.setUnique_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.UNIQUE_KEY_ID))));
-
-
-                    sb.setType((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_TYPE))));
-
-
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
-
-    public ArrayList<TOTBean> getAfterComplianceData(String store_id, String process_id) {
-
-        Log.d("FetchingStoredata--------------->Start<------------",
-                "------------------");
-        ArrayList<TOTBean> list = new ArrayList<TOTBean>();
-        Cursor dbcursor = null;
-
-        try {
-
-            dbcursor = db.rawQuery("SELECT * FROM QUESTION_ANSWER_TABLE WHERE STORE_ID = '" + store_id + "' AND PROCESS_ID ='" + process_id + "'"
-                    , null);
-
-            if (dbcursor != null) {
-                dbcursor.moveToFirst();
-                while (!dbcursor.isAfterLast()) {
-                    TOTBean sb = new TOTBean();
-
-
-                    sb.setUnique_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.UNIQUE_KEY_ID)));
-
-                    sb.setStore_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("STORE_ID")));
-
-                    sb.setCategory_id(dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
-
-
-                    sb.setDisplay_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("DISPLAY_ID"))));
-
-                    sb.setQuestion_id((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("QUESTION_ID"))));
-
-                    sb.setAnswer((dbcursor.getString(dbcursor
-                            .getColumnIndexOrThrow("ANSWER"))));
-
-
-                    list.add(sb);
-                    dbcursor.moveToNext();
-                }
-                dbcursor.close();
-                return list;
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception when fetching Records!!!!!!!!!!!!!!!!!!!!!",
-                    e.toString());
-            return list;
-        }
-
-        Log.d("FetchingStoredat---------------------->Stop<-----------",
-                "-------------------");
-        return list;
-
-    }
-
-    public ArrayList<SkuBean> getProductEntryDetailForUpload(String store_id, String process_id) {
-        Cursor cursordata = null;
-        ArrayList<SkuBean> productData = new ArrayList<SkuBean>();
-
-        try {
-
-            cursordata = db.rawQuery("SELECT  * from "
-                            + CommonString.TABLE_INSERT_ADDTIONAL_DETAILS + " where "
-                            + CommonString.KEY_STORE_ID + "='" + store_id + "' AND "
-                            + CommonString.KEY_PROCESS_ID + "='" + process_id + "'",
-                    null);
-
-            if (cursordata != null) {
-                cursordata.moveToFirst();
-                while (!cursordata.isAfterLast()) {
-                    SkuBean sb = new SkuBean();
-
-                    sb.setKey_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_ID)));
-
-                    sb.setBrand_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
-
-                    sb.setBrand(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_BRAND)));
-
-                    sb.setCategory_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
-
-
-                    sb.setDisplay(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_DISPLAY)));
-                    sb.setDisplay_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID)));
-
-                    sb.setQuantity(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_QUANTITY)));
-
-
-                    sb.setAdditional_image(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
-
-                    sb.setYesorno(cursordata.getString(cursordata.
-                            getColumnIndexOrThrow(CommonString.KEY_ADDITIONAL_YESYorNO)));
-
-
-                    productData.add(sb);
-                    cursordata.moveToNext();
-                }
-                cursordata.close();
-
-            }
-
-
-        } catch (Exception ex) {
-            Log.d("Database Exception while Insert Closes Data ",
-                    ex.toString());
-        }
-        return productData;
-
-    }
-
-    public ArrayList<SkuBean> getAfterProductEntryDetailForUpload(String store_id, String process_id) {
-        Cursor cursordata = null;
-        ArrayList<SkuBean> productData = new ArrayList<SkuBean>();
-
-        try {
-
-            cursordata = db.rawQuery("SELECT  * from "
-                            + CommonString.TABLE_INSERT_AFTER_ADDTIONAL_DETAILS + " where "
-                            + CommonString.KEY_STORE_ID + "='" + store_id + "' AND "
-                            + CommonString.KEY_PROCESS_ID + "='" + process_id + "'",
-                    null);
-
-            if (cursordata != null) {
-                cursordata.moveToFirst();
-                while (!cursordata.isAfterLast()) {
-                    SkuBean sb = new SkuBean();
-
-                    sb.setKey_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_ID)));
-
-                    sb.setBrand_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
-
-                    sb.setBrand(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_BRAND)));
-
-                    sb.setCategory_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
-
-
-                    sb.setDisplay(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_DISPLAY)));
-                    sb.setDisplay_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID)));
-
-                    sb.setQuantity(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_QUANTITY)));
-
-
-                    sb.setAdditional_image(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
-
-                    sb.setYesorno(cursordata.getString(cursordata.
-                            getColumnIndexOrThrow(CommonString.KEY_ADDITIONAL_YESYorNO)));
-
-
-                    productData.add(sb);
-                    cursordata.moveToNext();
-                }
-                cursordata.close();
-
-            }
-
-
-        } catch (Exception ex) {
-            Log.d("Database Exception while Insert Closes Data ",
-                    ex.toString());
-        }
-        return productData;
-
-    }
-
-    public void updateStoreStatusAfterImageUpload(String storeid, String visitdate,
-                                                  String status, String process_id) {
-
-        try {
-            ContentValues values = new ContentValues();
-
-            values.put("UPLOAD_STATUS", status);
-
-            db.update("JOURNEY_PLAN_SUP", values,
-                    CommonString.KEY_STORE_CD + "='" + storeid + "' AND "
-                            + CommonString.KEY_CURRENT_DATETIME + "='"
-                            + visitdate + "' AND PROCESS_ID = '" + process_id + "'", null);
-        } catch (Exception e) {
-
-        }
-    }
 
     public ArrayList<QuestionnairBean> getQuestionnairDataUpload(String storeId, String process_id) {
         Log.d("FetchingStoredata--------------->Start<------------",
@@ -2736,6 +1701,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                 values.put("PM1", data.getPM1().get(i));
                 values.put("PM2", data.getPM2().get(i));
                 values.put("PM3", data.getPM3().get(i));
+                values.put("CURPER", data.getCurrMonthper().get(i));
+                values.put("PM2PER", data.getPm2per().get(i));
+                values.put("PM1PER", data.getPm1per().get(i));
+                values.put("PM3PER", data.getPm3per().get(i));
                 db.insert("SUP_INCENTIVE_LTM", null, values);
             }
 
@@ -2761,6 +1730,12 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                     sb.setPM1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1")));
                     sb.setPM2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2")));
                     sb.setPM3(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3")));
+
+                    sb.setCurrMonthper(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CURPER")));
+                    sb.setPm1per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1PER")));
+                    sb.setPm2per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2PER")));
+                    sb.setPm3per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3PER")));
+
                     list.add(sb);
                     dbcursor.moveToNext();
                 }
@@ -2789,6 +1764,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                 values.put("PM2", data.getPm2().get(i));
                 values.put("PM1", data.getPm1().get(i));
                 values.put("PM3", data.getPm3().get(i));
+                values.put("CURRENTPER", data.getCurrMonthper().get(i));
+                values.put("PM2PER", data.getPm2per().get(i));
+                values.put("PM1PER", data.getPm1per().get(i));
+                values.put("PM3PER", data.getPm3per().get(i));
                 values.put("EMPLOYEE", data.getEmployee().get(i));
                 db.insert("SUP_FOCUS_SALES", null, values);
             }
@@ -2816,6 +1795,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                     sb.setPm1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1")));
                     sb.setPm2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2")));
                     sb.setPm3(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3")));
+                    sb.setCurrMonthper(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CURRENTPER")));
+                    sb.setPm1per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1PER")));
+                    sb.setPm2per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2PER")));
+                    sb.setPm3per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3PER")));
                     list.add(sb);
                     dbcursor.moveToNext();
                 }
@@ -2845,6 +1828,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                 values.put("PM2", data.getPm2().get(i));
                 values.put("PM1", data.getPm1().get(i));
                 values.put("PM3", data.getPm3().get(i));
+                values.put("CURRENTPER", data.getCurrMonthper().get(i));
+                values.put("PM2PER", data.getPm2per().get(i));
+                values.put("PM1PER", data.getPm1per().get(i));
+                values.put("PM3PER", data.getPm3per().get(i));
                 values.put("EMPLOYEE", data.getEmployee().get(i));
                 db.insert("SUP_TOTAL_SALES", null, values);
             }
@@ -2873,6 +1860,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                     sb.setPm1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1")));
                     sb.setPm2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2")));
                     sb.setPm3(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3")));
+                    sb.setCurrMonthper(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CURRENTPER")));
+                    sb.setPm1per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1PER")));
+                    sb.setPm2per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2PER")));
+                    sb.setPm3per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3PER")));
                     list.add(sb);
                     dbcursor.moveToNext();
                 }
@@ -2956,6 +1947,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                 values.put("PM2", data.getPm2().get(i));
                 values.put("PM1", data.getPm1().get(i));
                 values.put("PM3", data.getPm3().get(i));
+                values.put("CURRENTPER", data.getCurrMonthper().get(i));
+                values.put("PM2PER", data.getPm2per().get(i));
+                values.put("PM1PER", data.getPm1per().get(i));
+                values.put("PM3PER", data.getPm3per().get(i));
                 values.put("CURRENTMONTH", data.getCuurrentM().get(i));
                 values.put("EMPLOYEE", data.getEmployee().get(i));
                 values.put("TARGET", data.getTarget().get(i));
@@ -2987,6 +1982,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                     sb.setPm2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2")));
                     sb.setPm3(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3")));
                     sb.setTarget(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TARGET")));
+                    sb.setCurrMonthper(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CURRENTPER")));
+                    sb.setPm1per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1PER")));
+                    sb.setPm2per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2PER")));
+                    sb.setPm3per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3PER")));
                     list.add(sb);
                     dbcursor.moveToNext();
                 }
@@ -3016,6 +2015,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                 values.put("PM1", data.getPm1().get(i));
                 values.put("PM3", data.getPm3().get(i));
                 values.put("TARGET", data.getTarget().get(i));
+                values.put("CURRENTPER", data.getCurrMonthper().get(i));
+                values.put("PM2PER", data.getPm2per().get(i));
+                values.put("PM1PER", data.getPm1per().get(i));
+                values.put("PM3PER", data.getPm3per().get(i));
                 values.put("CURRENTMONTH", data.getCurrentM().get(i));
                 values.put("EMPLOYEE", data.getEmployee().get(i));
                 db.insert("SUP_TOTAL_SALES_STOREWISE", null, values);
@@ -3046,6 +2049,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                     sb.setPm2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2")));
                     sb.setPm3(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3")));
                     sb.setTarget(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TARGET")));
+                    sb.setCurrMonthper(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CURRENTPER")));
+                    sb.setPm1per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1PER")));
+                    sb.setPm2per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2PER")));
+                    sb.setPm3per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3PER")));
                     list.add(sb);
                     dbcursor.moveToNext();
                 }
@@ -3076,6 +2083,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                 values.put("PM3", data.getPm3().get(i));
                 values.put("CURRENTMONTH", data.getCurrentM().get(i));
                 values.put("EMPLOYEE", data.getMerchanD().get(i));
+                values.put("CURRPER", data.getCurrMonthper().get(i));
+                values.put("PM2PER", data.getPm2per().get(i));
+                values.put("PM1PER", data.getPm1per().get(i));
+                values.put("PM3PER", data.getPm3per().get(i));
                 db.insert("SUP_PSS_STOREWISE", null, values);
             }
 
@@ -3091,8 +2102,8 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
         ArrayList<PssStorewiseGetterSetter> list = new ArrayList<PssStorewiseGetterSetter>();
         Cursor dbcursor = null;
         try {
-            dbcursor = db.rawQuery("SELECT * from SUP_PSS_STOREWISE where " + CommonString.KEY_STORE_ID + " = '" + store_id + "'", null);
 
+            dbcursor = db.rawQuery("SELECT * from SUP_PSS_STOREWISE where " + CommonString.KEY_STORE_ID + " = '" + store_id + "'", null);
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
@@ -3102,6 +2113,10 @@ public class GSK_MT_SUPDatabase extends SQLiteOpenHelper {
                     sb.setPm1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1")));
                     sb.setPm2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2")));
                     sb.setPm3(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3")));
+                    sb.setCurrMonthper(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CURRPER")));
+                    sb.setPm1per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM1PER")));
+                    sb.setPm2per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM2PER")));
+                    sb.setPm3per(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PM3PER")));
                     list.add(sb);
                     dbcursor.moveToNext();
                 }

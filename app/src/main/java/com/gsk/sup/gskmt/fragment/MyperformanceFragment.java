@@ -22,8 +22,6 @@ import java.util.ArrayList;
 public class MyperformanceFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     ListView myPerList;
     GSK_MT_SUPDatabase db;
     ArrayList<SupincentiveGetterSetter> list = new ArrayList<>();
@@ -67,6 +65,7 @@ public class MyperformanceFragment extends Fragment {
             // TODO Auto-generated method stub
             ViewHolder holder = null;
             if (convertView == null) {
+
                 holder = new ViewHolder();
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.row_sales, null);
@@ -75,16 +74,18 @@ public class MyperformanceFragment extends Fragment {
                 holder.pm2 = (TextView) convertView.findViewById(R.id.pm2_txt);
                 holder.pm3 = (TextView) convertView.findViewById(R.id.pm3_txt);
                 convertView.setTag(holder);
+
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             holder.currentM.setText(list.get(position).getCurMonth().get(0));
-            holder.pm3.setBackgroundColor(Color.GREEN);
-            holder.Pm1.setBackgroundColor(Color.GREEN);
-            holder.pm2.setBackgroundColor(Color.GREEN);
-            holder.Pm1.setText(list.get(position).getPM1().get(0));
+            holder.pm3.setBackgroundColor(getPerColorwithDivided(list.get(position).getPm3per().get(0)));
+            holder.Pm1.setBackgroundColor(getPerColorwithDivided(list.get(position).getPm1per().get(0)));
+            holder.pm2.setBackgroundColor(getPerColorwithDivided(list.get(position).getPm2per().get(0)));
 
+
+            holder.Pm1.setText(list.get(position).getPM1().get(0));
             holder.pm2.setText(list.get(position).getPM2().get(0));
             holder.pm3.setText(list.get(position).getPM3().get(0));
             return convertView;
@@ -95,6 +96,20 @@ public class MyperformanceFragment extends Fragment {
 
         }
 
+    }
 
+    public int getPerColorwithDivided(String  val) {
+        int per = 0;
+
+        try {
+            per = Integer.parseInt(val);
+        } catch (Exception e) {
+
+        }
+        if (per > 70) {
+            return Color.GREEN;
+        } else {
+            return Color.RED;
+        }
     }
 }

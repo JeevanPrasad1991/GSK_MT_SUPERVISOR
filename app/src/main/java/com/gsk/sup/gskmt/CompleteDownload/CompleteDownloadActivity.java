@@ -777,6 +777,7 @@ public class CompleteDownloadActivity extends AppCompatActivity {
                     xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
+
                     focusSaleStoreWiseGetterSetter = XMLHandlers.FocusSaleStoreWiseMappingXMLHandler(xpp, eventType);
                     if (focusSaleStoreWiseGetterSetter.getStorenm().size() > 0) {
                         //resultHttp = CommonString.KEY_SUCCESS;
@@ -804,6 +805,9 @@ public class CompleteDownloadActivity extends AppCompatActivity {
                     xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
+
+
+
                     totalSaleStorewiseGetterSetter = XMLHandlers.TotalSaleStoreWiseMappingXMLHandler(xpp, eventType);
                     if (totalSaleStorewiseGetterSetter.getStoreN().size() > 0) {
                         //resultHttp = CommonString.KEY_SUCCESS;

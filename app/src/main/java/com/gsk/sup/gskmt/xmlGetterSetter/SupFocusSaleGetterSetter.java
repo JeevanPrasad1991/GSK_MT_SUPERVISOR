@@ -9,9 +9,12 @@ import java.util.ArrayList;
 public class SupFocusSaleGetterSetter {
     String supfocussaleTable;
     ArrayList<String>employee=new ArrayList<>();
+
+
     ArrayList<String>currMonth=new ArrayList<>();
     ArrayList<String>pm2=new ArrayList<>();
     ArrayList<String>pm1=new ArrayList<>();
+    ArrayList<String>pm3=new ArrayList<>();
 
     public ArrayList<String> getPm1() {
         return pm1;
@@ -29,7 +32,7 @@ public class SupFocusSaleGetterSetter {
         this.pm3.add(pm3);
     }
 
-    ArrayList<String>pm3=new ArrayList<>();
+
 
     public String getSupfocussaleTable() {
         return supfocussaleTable;
@@ -61,5 +64,43 @@ public class SupFocusSaleGetterSetter {
 
     public void setPm2(String pm2) {
         this.pm2.add(pm2);
+    }
+
+
+    ArrayList<String>currMonthper=new ArrayList<>();
+    ArrayList<String>pm2per=new ArrayList<>();
+    ArrayList<String>pm1per=new ArrayList<>();
+    ArrayList<String>pm3per=new ArrayList<>();
+
+    public ArrayList<String> getCurrMonthper() {
+        return currMonthper;
+    }
+
+    public void setCurrMonthper(String currMonthper) {
+        this.currMonthper.add(currMonthper);
+    }
+
+    public ArrayList<String> getPm2per() {
+        return pm2per;
+    }
+
+    public void setPm2per(String pm2per) {
+        this.pm2per.add(pm2per);
+    }
+
+    public ArrayList<String> getPm1per() {
+        return pm1per;
+    }
+
+    public void setPm1per(String pm1per) {
+        this.pm1per.add(pm1per);
+    }
+
+    public ArrayList<String> getPm3per() {
+        return pm3per;
+    }
+
+    public void setPm3per(String pm3per) {
+        this.pm3per.add(pm3per);
     }
 }

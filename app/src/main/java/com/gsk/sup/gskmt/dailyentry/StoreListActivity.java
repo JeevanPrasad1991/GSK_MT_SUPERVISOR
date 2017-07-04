@@ -412,7 +412,7 @@ public class StoreListActivity extends AppCompatActivity {
             });
             String storecd = jcplist.get(position).getSTORE_ID();
             database.open();
-            ArrayList<CoverageBean> coverage_Some_data = database.getCoverageSomeData_(storecd);
+            ArrayList<CoverageBean> coverage_Some_data = database.getCoverageSomeData_(storecd,date);
             ArrayList<CoverageBean> coveragebeenData = database.getCoverageSpecificData(storecd);
             if (jcplist.get(position).getUPLOAD_STATUS().equals(CommonString.KEY_U)) {
                 holder.img.setVisibility(View.VISIBLE);

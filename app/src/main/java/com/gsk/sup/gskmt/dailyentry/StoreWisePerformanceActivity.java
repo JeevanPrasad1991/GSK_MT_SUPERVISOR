@@ -1,5 +1,6 @@
 package com.gsk.sup.gskmt.dailyentry;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -29,9 +32,6 @@ import android.widget.TextView;
 import com.gsk.sup.R;
 import com.gsk.sup.gskmt.Constants.CommonString;
 import com.gsk.sup.gskmt.Database.GSK_MT_SUPDatabase;
-import com.gsk.sup.gskmt.MainMenuActivity;
-import com.gsk.sup.gskmt.delegates.CoverageBean;
-import com.gsk.sup.gskmt.fragment.TeamPerformanceFragment;
 import com.gsk.sup.gskmt.xmlGetterSetter.FocusSaleStoreWiseGetterSetter;
 import com.gsk.sup.gskmt.xmlGetterSetter.PerformanceNonAchivementGetterSetter;
 import com.gsk.sup.gskmt.xmlGetterSetter.RemarkGetterSetter;
@@ -46,17 +46,19 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
     GSK_MT_SUPDatabase db;
     String date, process_id, store_id, STORE_NAME;
     TextView store_name_txt;
-    LinearLayout rl_Remark, rl_parent,rl_store_nam,no_data_lay;
+    LinearLayout rl_Remark, rl_store_nam, no_data_lay, rl_focus, rl_total;
     FloatingActionButton save_btn;
     Spinner remark_spinner;
-    ArrayList<FocusSaleStoreWiseGetterSetter> list = new ArrayList<>();
+    ArrayList<FocusSaleStoreWiseGetterSetter> focussalesList = new ArrayList<>();
     ArrayList<TotalSaleStorewiseGetterSetter> totalSaleList = new ArrayList<>();
     ArrayList<RemarkGetterSetter> remarkList = new ArrayList<>();
-    String color1 = "", color = "", reason_name = "", reason_id = "";
+    String reason_name = "", reason_id = "";
     TextView emp, current, fpm1, fpm2, fpm3, emp1, current1, fpm1_1, fpm2_1, fpm3_1;
     private ArrayAdapter<CharSequence> reason_adapter;
     PerformanceNonAchivementGetterSetter performanceNonAchivementGetterSetter;
-    int a,b,c;
+    int a, b, c;
+    int color, color1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +74,12 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
         rl_Remark = (LinearLayout) findViewById(R.id.rl_Remark);
         save_btn = (FloatingActionButton) findViewById(R.id.save_btn1);
         remark_spinner = (Spinner) findViewById(R.id.remark_spinner);
-        rl_parent = (LinearLayout) findViewById(R.id.rl_parent);
-        rl_store_nam= (LinearLayout) findViewById(R.id.rl_store_nam);
-        no_data_lay= (LinearLayout) findViewById(R.id.no_data_lay);
+
+        rl_store_nam = (LinearLayout) findViewById(R.id.rl_store_nam);
+        no_data_lay = (LinearLayout) findViewById(R.id.no_data_lay);
+        rl_focus = (LinearLayout) findViewById(R.id.rl_focus);
+        rl_total = (LinearLayout) findViewById(R.id.rl_total);
+
         emp = (TextView) findViewById(R.id.emp_txt1);
         current = (TextView) findViewById(R.id.current_txt1);
         fpm1 = (TextView) findViewById(R.id.Fpm1_txt1);
@@ -91,99 +96,6 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
         process_id = preferences.getString(CommonString.KEY_PROCESS_ID, null);
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
         STORE_NAME = preferences.getString(CommonString.KEY_STORE_NAME, null);
-        store_name_txt.setText(STORE_NAME);
-        list = db.getStoreWiseFocusSaleData(store_id);
-        totalSaleList = db.getStoreWiseTotalSaleData(store_id);
-        if (list.size()==0 && totalSaleList.size()==0){
-            rl_parent.setVisibility(View.GONE);
-            rl_store_nam.setVisibility(View.GONE);
-            no_data_lay.setVisibility(View.VISIBLE);
-            save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right_arrow));
-        }
-        if (list.size() > 0) {
-            rl_parent.setVisibility(View.VISIBLE);
-            rl_store_nam.setVisibility(View.VISIBLE);
-            no_data_lay.setVisibility(View.GONE);
-            try {
-                 a = Integer.parseInt(list.get(0).getTarget().get(0));
-
-            }catch (NumberFormatException e){
-                e.printStackTrace();
-            }
-
-            if (a != 0) {
-                color = checkachievement(list.get(0).getCuurrentM().get(0), list.get(0).getTarget().get(0));
-                if (color.equalsIgnoreCase("red")) {
-                    current1.setBackgroundColor(Color.RED);
-                } else if (color.equalsIgnoreCase("amber")) {
-                    current1.setBackgroundColor(Color.YELLOW);
-                } else {
-                    if (color.equalsIgnoreCase("green")) {
-                        current1.setBackgroundColor(Color.GREEN);
-                    }
-                }
-            } else {
-                current1.setBackgroundColor(Color.GREEN);
-            }
-
-            emp1.setText(list.get(0).getEmployee().get(0));
-            current1.setText(list.get(0).getCuurrentM().get(0));
-            fpm1_1.setText(list.get(0).getPm1().get(0));
-            fpm2_1.setText(list.get(0).getPm2().get(0));
-            fpm3_1.setText(list.get(0).getPm3().get(0));
-
-            // storewisePList.setAdapter(new FocusBrandAdapter());
-        }else {
-            rl_parent.setVisibility(View.GONE);
-            rl_store_nam.setVisibility(View.GONE);
-            no_data_lay.setVisibility(View.VISIBLE);
-            save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right_arrow));
-        }
-        if (totalSaleList.size() > 0) {
-            rl_parent.setVisibility(View.VISIBLE);
-            rl_store_nam.setVisibility(View.VISIBLE);
-            no_data_lay.setVisibility(View.GONE);
-            try {
-                b = Integer.parseInt(totalSaleList.get(0).getTarget().get(0));
-            }catch (NumberFormatException e){
-                e.printStackTrace();
-            }
-
-            if (b != 0) {
-                color1 = checkachievement(totalSaleList.get(0).getCurrentM().get(0), totalSaleList.get(0).getTarget().get(0));
-                if (color1.equalsIgnoreCase("red")) {
-                    current.setBackgroundColor(Color.RED);
-                } else if (color1.equalsIgnoreCase("amber")) {
-                    current.setBackgroundColor(Color.YELLOW);
-                } else {
-                    if (color1.equalsIgnoreCase("green")) {
-                        current.setBackgroundColor(Color.GREEN);
-                    }
-                }
-            } else {
-                current.setBackgroundColor(Color.GREEN);
-            }
-            emp.setText(totalSaleList.get(0).getEmployee().get(0));
-            current.setText(totalSaleList.get(0).getCurrentM().get(0));
-            fpm1.setText(totalSaleList.get(0).getPm1().get(0));
-            fpm2.setText(totalSaleList.get(0).getPm2().get(0));
-            fpm3.setText(totalSaleList.get(0).getPm3().get(0));
-            //  total_list.setAdapter(new totalSaleStorewiseAdapter());
-        }else {
-            rl_parent.setVisibility(View.GONE);
-            rl_store_nam.setVisibility(View.GONE);
-            no_data_lay.setVisibility(View.VISIBLE);
-            save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right_arrow));
-        }
-
-        if (!color.equalsIgnoreCase("") || !color1.equalsIgnoreCase("")) {
-            if (color.equalsIgnoreCase("red") || color1.equalsIgnoreCase("red")) {
-                rl_Remark.setVisibility(View.VISIBLE);
-                save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.save_icon));
-            }
-        } else {
-            save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right_arrow));
-        }
 
         remarkList = db.getRemarksData();
         reason_adapter = new ArrayAdapter<CharSequence>(this, R.layout.spinner_custom_item);
@@ -192,27 +104,135 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
             reason_adapter.add(remarkList.get(i).getRemark().get(0));
         }
         remark_spinner.setAdapter(reason_adapter);
-        performanceNonAchivementGetterSetter=  db.getnonAchievementData(store_id);
+        performanceNonAchivementGetterSetter = db.getnonAchievementData(store_id);
 
         for (int i = 0; i < remarkList.size(); i++) {
             if (performanceNonAchivementGetterSetter.getReason_id().equals(remarkList.get(i).getRemark_cd().get(0))) {
-                remark_spinner.setSelection(i+1);
+                remark_spinner.setSelection(i + 1);
             }
         }
         remark_spinner.setOnItemSelectedListener(this);
+        store_name_txt.setText(STORE_NAME);
+        focussalesList = db.getStoreWiseFocusSaleData(store_id);
+        totalSaleList = db.getStoreWiseTotalSaleData(store_id);
+
+        if (focussalesList.size() == 0 && totalSaleList.size() == 0) {
+            rl_Remark.setVisibility(View.GONE);
+            rl_total.setVisibility(View.GONE);
+            rl_focus.setVisibility(View.GONE);
+            rl_store_nam.setVisibility(View.GONE);
+            no_data_lay.setVisibility(View.VISIBLE);
+            save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right_arrow));
+        }
+        if (focussalesList.size() > 0) {
+            rl_focus.setVisibility(View.VISIBLE);
+            rl_store_nam.setVisibility(View.VISIBLE);
+            no_data_lay.setVisibility(View.GONE);
+            emp1.setText(focussalesList.get(0).getEmployee().get(0));
+            current1.setBackgroundColor(getPerColor(focussalesList.get(0).getCurrMonthper().get(0)));
+            current1.setText(focussalesList.get(0).getCuurrentM().get(0));
+            fpm1_1.setText(focussalesList.get(0).getPm1().get(0));
+            fpm2_1.setText(focussalesList.get(0).getPm2().get(0));
+            fpm3_1.setText(focussalesList.get(0).getPm3().get(0));
+            // storewisePList.setAdapter(new FocusBrandAdapter());
+
+            color1 = getPerColor(focussalesList.get(0).getCurrMonthper().get(0));
+            if (color == Color.RED) {
+                rl_Remark.setVisibility(View.VISIBLE);
+                save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.save_icon));
+            } else {
+                save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right_arrow));
+            }
+
+            current1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog dialog = new Dialog(StoreWisePerformanceActivity.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.custom_dialog_focus);
+                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                    final TextView focus_target = (TextView) dialog.findViewById(R.id.focus_target);
+                    final TextView focus_achievment = (TextView) dialog.findViewById(R.id.focus_achievment);
+                    final TextView focus_perc = (TextView) dialog.findViewById(R.id.focus_perc);
+                    focus_target.setText(focussalesList.get(0).getTarget().get(0));
+                    focus_achievment.setText(focussalesList.get(0).getCuurrentM().get(0));
+                    focus_perc.setText(focussalesList.get(0).getCurrMonthper().get(0));
+                    final Button btn_ok = (Button) dialog.findViewById(R.id.btn_ok);
+                    btn_ok.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
+            });
+        } else {
+            rl_focus.setVisibility(View.GONE);
+        }
+
+
+        if (totalSaleList.size() > 0) {
+            rl_total.setVisibility(View.VISIBLE);
+            rl_store_nam.setVisibility(View.VISIBLE);
+            no_data_lay.setVisibility(View.GONE);
+            emp.setText(totalSaleList.get(0).getEmployee().get(0));
+            current.setBackgroundColor(getPerColor(totalSaleList.get(0).getCurrMonthper().get(0)));
+            current.setText(totalSaleList.get(0).getCurrentM().get(0));
+            fpm1.setText(totalSaleList.get(0).getPm1().get(0));
+            fpm2.setText(totalSaleList.get(0).getPm2().get(0));
+            fpm3.setText(totalSaleList.get(0).getPm3().get(0));
+
+            color = getPerColor(totalSaleList.get(0).getCurrMonthper().get(0));
+            if (color == Color.RED) {
+                rl_Remark.setVisibility(View.VISIBLE);
+                save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.save_icon));
+            } else {
+                save_btn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right_arrow));
+            }
+            current.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog dialog = new Dialog(StoreWisePerformanceActivity.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.custom_dialog_total);
+                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                    final TextView total_target = (TextView) dialog.findViewById(R.id.total_target);
+                    final TextView total_achievment = (TextView) dialog.findViewById(R.id.total_achievment);
+                    final TextView total_perc = (TextView) dialog.findViewById(R.id.total_perc);
+                    total_target.setText(totalSaleList.get(0).getTarget().get(0));
+                    total_achievment.setText(totalSaleList.get(0).getCurrentM().get(0));
+                    total_perc.setText(totalSaleList.get(0).getCurrMonthper().get(0));
+                    final Button btn_ok = (Button) dialog.findViewById(R.id.btn_ok);
+                    btn_ok.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+
+                }
+            });
+        } else {
+            rl_total.setVisibility(View.GONE);
+        }
+
+
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db = new GSK_MT_SUPDatabase(StoreWisePerformanceActivity.this);
-                if (color.equalsIgnoreCase("red") || color1.equalsIgnoreCase("red")) {
+                if (color == Color.RED || color1 == Color.RED) {
                     if (validatedata()) {
-                        AlertDialog.Builder builder=new AlertDialog.Builder(StoreWisePerformanceActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(StoreWisePerformanceActivity.this);
                         builder.setTitle("Parinaam").setMessage("Save Non achievement data");
                         builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 db.open();
-                                db.InsertNonAchivementPerformance(store_id,reason_id,reason_name);
+                                // db.getnonAchievementData()
+                                db.InsertNonAchivementPerformance(store_id, reason_id, reason_name,date);
                                 db.close();
                                 startActivity(new Intent(getApplicationContext(), StorewisePssPerformanceActivity.class));
                                 finish();
@@ -223,7 +243,8 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
-                        });builder.show();
+                        });
+                        builder.show();
 
 
                     } else {
@@ -265,11 +286,12 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
     class FocusBrandAdapter extends BaseAdapter {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-            return list.size();
+            return focussalesList.size();
         }
 
         @Override
@@ -301,21 +323,12 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            color = checkachievement(list.get(position).getCuurrentM().get(0), list.get(position).getTarget().get(0));
-            if (color.equalsIgnoreCase("red")) {
-                holder.current.setBackgroundColor(Color.RED);
-            } else if (color.equalsIgnoreCase("amber")) {
-                holder.current.setBackgroundColor(Color.YELLOW);
-            } else {
-                if (color.equalsIgnoreCase("green")) {
-                    holder.current.setBackgroundColor(Color.GREEN);
-                }
-            }
-            holder.emp.setText(list.get(position).getEmployee().get(0));
-            holder.current.setText(list.get(position).getCuurrentM().get(0));
-            holder.fpm1.setText(list.get(position).getPm1().get(0));
-            holder.fpm2.setText(list.get(position).getPm2().get(0));
-            holder.fpm3.setText(list.get(position).getPm3().get(0));
+
+            holder.emp.setText(focussalesList.get(position).getEmployee().get(0));
+            holder.current.setText(focussalesList.get(position).getCuurrentM().get(0));
+            holder.fpm1.setText(focussalesList.get(position).getPm1().get(0));
+            holder.fpm2.setText(focussalesList.get(position).getPm2().get(0));
+            holder.fpm3.setText(focussalesList.get(position).getPm3().get(0));
             return convertView;
         }
 
@@ -363,7 +376,7 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            color1 = checkachievement(totalSaleList.get(position).getCurrentM().get(0), totalSaleList.get(position).getTarget().get(0));
+          /*  color1 = checkachievement(totalSaleList.get(position).getCurrentM().get(0), totalSaleList.get(position).getTarget().get(0));
             if (color1.equalsIgnoreCase("red")) {
                 holder.current.setBackgroundColor(Color.RED);
             } else if (color1.equalsIgnoreCase("amber")) {
@@ -372,7 +385,7 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
                 if (color1.equalsIgnoreCase("green")) {
                     holder.current.setBackgroundColor(Color.GREEN);
                 }
-            }
+            }*/
 
             holder.emp.setText(totalSaleList.get(position).getEmployee().get(0));
             holder.current.setText(totalSaleList.get(position).getCurrentM().get(0));
@@ -405,6 +418,21 @@ public class StoreWisePerformanceActivity extends AppCompatActivity implements A
         Intent in = new Intent(this, StoreListActivity.class);
         startActivity(in);
         finish();
+    }
+
+    public int getPerColor(String val) {
+        int per = 0;
+        try {
+            per = Integer.parseInt(val);
+        } catch (Exception e) {
+
+        }
+
+        if (per > 70) {
+            return Color.GREEN;
+        } else {
+            return Color.RED;
+        }
     }
 
 

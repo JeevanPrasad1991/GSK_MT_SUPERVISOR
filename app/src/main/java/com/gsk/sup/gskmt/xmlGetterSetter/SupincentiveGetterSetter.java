@@ -12,6 +12,42 @@ public class SupincentiveGetterSetter {
     ArrayList<String>PM1=new ArrayList<>();
     ArrayList<String>PM2=new ArrayList<>();
     ArrayList<String>PM3=new ArrayList<>();
+    ArrayList<String>currMonthper=new ArrayList<>();
+    ArrayList<String>pm2per=new ArrayList<>();
+    ArrayList<String>pm1per=new ArrayList<>();
+    ArrayList<String>pm3per=new ArrayList<>();
+
+    public ArrayList<String> getCurrMonthper() {
+        return currMonthper;
+    }
+
+    public void setCurrMonthper(String currMonthper) {
+        this.currMonthper.add(currMonthper);
+    }
+
+    public ArrayList<String> getPm2per() {
+        return pm2per;
+    }
+
+    public void setPm2per(String pm2per) {
+        this.pm2per.add(pm2per);
+    }
+
+    public ArrayList<String> getPm1per() {
+        return pm1per;
+    }
+
+    public void setPm1per(String pm1per) {
+        this.pm1per.add(pm1per);
+    }
+
+    public ArrayList<String> getPm3per() {
+        return pm3per;
+    }
+
+    public void setPm3per(String pm3per) {
+        this.pm3per.add(pm3per);
+    }
     public String getSupincentiveTable() {
         return supincentiveTable;
     }

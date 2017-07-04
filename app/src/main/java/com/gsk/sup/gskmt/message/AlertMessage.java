@@ -79,11 +79,9 @@ public class AlertMessage {
             acra_login(data);
         } else if (condition.equals("socket_login")) {
             socket_login(data);
-        }
-        else if (condition.equals("checkoutfail")) {
+        } else if (condition.equals("checkoutfail")) {
             socket_login(data);
-        }
-        else if (condition.equals("socket")) {
+        } else if (condition.equals("socket")) {
 
             socket(data);
 
@@ -532,10 +530,6 @@ public class AlertMessage {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                Intent i = new Intent(activity, StoreListActivity.class);
-                                activity.startActivity(i);
-                                activity.finish();
-
                             }
                         })
 
@@ -561,11 +555,7 @@ public class AlertMessage {
                 .setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
                                 dialog.cancel();
-                                Intent i = new Intent(activity, MainMenuActivity.class);
-                                activity.startActivity(i);
-                                activity.finish();
 
                             }
                         })
